@@ -9,8 +9,8 @@ def trim_chapters(metadata):
     prompt = """
     You are an AI assistant tasked with identifying the main chapters of a book.
     Given a JSON structure containing book metadata and chapters, your job is to:
-    1. Identify the main chapters of the book.
-    2. Remove any sections that are not main chapters (e.g., prefaces, introductions, appendices, endnotes, about the author, etc.).
+    1. Identify the main chapters of the book. Examples of chapters that are not considered main are prefaces, introductions, appendices, endnotes, about the author, etc.
+    2. Identify the first main chapter and the last. Keep all chapters in between them and discard all the rest. Never discard a chapter between the first and the last main chapters even if it does not look to be a main chapter.
     3. Return a new JSON structure with only the main chapters.
 
     Use these guidelines:
@@ -25,11 +25,12 @@ def trim_chapters(metadata):
     Please return only a valid JSON structure with the trimmed chapters, maintaining the original format.
     """
 
+    content = prompt.format(json_data=json.dumps(metadata, indent=2))
     response = client.chat.completions.create(
         model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that processes book metadata."},
-            {"role": "user", "content": prompt.format(json_data=json.dumps(metadata, indent=2))}
+            {"role": "user", "content": content }
         ],
         temperature=0.2,
     )
