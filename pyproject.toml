@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "speedread"
+version = "0.1.0"
+description = ""
+authors = ["Assaf Lavie <a@assaflavie.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+EbookLib = "^0.18"
+beautifulsoup4 = "^4.12.3"
+openai = "^1.51.0"
+tqdm = "^4.65.0"
+Jinja2 = "^3.1.2"
+tiktoken = "^0.8.0"
+lxml = "^5.3.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+
+[tool.poetry.scripts]
+epub2txt = "speedread.epub2txt:main"
+summarize_book = "speedread.summarize_book:main"
+compile_summaries = "speedread.compile_summaries:main"
+text_to_speech = "speedread.text_to_speech:main"
+batch_text_to_speech = "speedread.batch_text_to_speech:main"
+create_audiobook = "speedread.create_audiobook:main"
+speedread = "speedread.speedread_cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book_title }} by {{ book_author }} - Summary</title>
+    <style>
+        body {
+            font-family: Charter, Georgia, Cambria, "Times New Roman", Times, serif;
+            line-height: 1.6;
+            color: rgba(0, 0, 0, 0.84);
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 30px;
+            font-weight: 700;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+        .author {
+            font-size: 24px;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        p {
+            font-size: 21px;
+            margin-bottom: 30px;
+        }
+        .chapter {
+            margin-bottom: 50px;
+        }
+        #toc {
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        #toc h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        #toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #toc li {
+            margin-bottom: 10px;
+        }
+        #toc a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s;
+        }
+        #toc a:hover {
+            text-decoration: underline;
+        }
+        .dark-mode #toc {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .medium-mode #toc {
+            border-color: rgba(230, 209, 149, 0.3);
+        }
+        #mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: rgba(255, 255, 255, 0.84);
+        }
+        .dark-mode h1, .dark-mode h2, .dark-mode .author {
+            color: #fff;
+        }
+        .dark-mode #mode-toggle {
+            background-color: #333;
+            color: #fff;
+        }
+        .medium-mode {
+            background-color: #2f2f2f;
+            color: #e6d195;
+        }
+        .medium-mode h1, .medium-mode h2, .medium-mode .author {
+            color: #f0e0b2;
+        }
+        .medium-mode #mode-toggle {
+            background-color: #4a4a4a;
+            color: #e6d195;
+        }
+    </style>
+</head>
+<body>
+    <button id="mode-toggle">Toggle Dark Mode</button>
+    <div class="container">
+        <h1>{{ book_title }}</h1>
+        <div class="author">by {{ book_author }}</div>
+        <div id="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                {% for chapter in chapters %}
+                <li><a href="#chapter-{{ chapter.number }}">{{ chapter.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% for chapter in chapters %}
+        <div id="chapter-{{ chapter.number }}" class="chapter">
+            <h2>{{ chapter.name }}</h2>
+            {{ chapter.content|safe }}
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        const modeToggle = document.getElementById('mode-toggle');
+        const body = document.body;
+        const modes = ['light', 'dark', 'medium'];
+        let currentModeIndex = 0;
+        
+        modeToggle.addEventListener('click', () => {
+            body.classList.remove(`${modes[currentModeIndex]}-mode`);
+            currentModeIndex = (currentModeIndex + 1) % modes.length;
+            body.classList.add(`${modes[currentModeIndex]}-mode`);
+            modeToggle.textContent = `Toggle ${modes[(currentModeIndex + 1) % modes.length].charAt(0).toUpperCase() + modes[(currentModeIndex + 1) % modes.length].slice(1)} Mode`;
+        });
+    </script>
+</body>
+</html>
