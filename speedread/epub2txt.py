@@ -8,15 +8,6 @@ from speedread.epub_metadata import extract_toc_from_epub
 from speedread.trim_chapters import trim_chapters
 
 def extract_chapter_content(temp_dir, toc_path, chapter_src):
-    # # Print directory content
-    # print("Contents of temp_dir:")
-    # for root, dirs, files in os.walk(temp_dir):
-    #     level = root.replace(temp_dir, '').count(os.sep)
-    #     indent = ' ' * 4 * level
-    #     print(f"{indent}{os.path.basename(root)}/")
-    #     sub_indent = ' ' * 4 * (level + 1)
-    #     for file in files:
-    #         print(f"{sub_indent}{file}")
             
     base_dir = os.path.dirname(toc_path)
     chapter_path = os.path.join(temp_dir, base_dir, chapter_src)
@@ -37,10 +28,8 @@ def epub_to_structured_text(epub_path):
             # Extract metadata
             metadata = extract_toc_from_epub(epub_path)
             
-            print(json.dumps(metadata, indent=2))
             # Trim chapters
             trimmed_metadata = trim_chapters(metadata)
-            print(json.dumps(trimmed_metadata, indent=2))
             
             # Find the TOC file path
             toc_path = None
@@ -61,7 +50,6 @@ def epub_to_structured_text(epub_path):
             # Extract chapter contents
             for chapter in trimmed_metadata['chapters']:
                 chapter['content'] = extract_chapter_content(temp_dir, toc_path, chapter['src'])
-                print(chapter)
                 del chapter['src']  # Remove the 'src' key as it's no longer needed
             
             # Cleanup phase: discard chapters with content less than 1KB
