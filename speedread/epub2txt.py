@@ -24,6 +24,16 @@ def epub_to_structured_text(epub_path):
             with zipfile.ZipFile(epub_path, 'r') as zip_ref:
                 zip_ref.extractall(temp_dir)
             
+            # Print directory content
+            print("Contents of temp_dir:")
+            for root, dirs, files in os.walk(temp_dir):
+                level = root.replace(temp_dir, '').count(os.sep)
+                indent = ' ' * 4 * level
+                print(f"{indent}{os.path.basename(root)}/")
+                sub_indent = ' ' * 4 * (level + 1)
+                for file in files:
+                    print(f"{sub_indent}{file}")
+            
             # Extract metadata
             metadata = extract_toc_from_epub(epub_path)
             
