@@ -36,6 +36,8 @@ SpeedRead Tools is a Python-based project that processes EPUB books to create su
 
 ## Usage
 
+### Using Poetry
+
 The main CLI script `speedread_cli.py` combines all the functionality into a single command. Here's how to use it:
 
 ```
@@ -52,6 +54,16 @@ Example:
 poetry run python speedread/speedread_cli.py my_ebook.epub --audiobook --concurrency 3
 ```
 
+### Using Docker
+
+To run the project using Docker, first build the Docker image (see the "Building the Docker Image" section below), then use the following command:
+
+```
+docker run -v $(pwd):/data -e OPENAI_API_KEY='your-api-key-here' assaflavie/speedread /data/my_ebook.epub [--audiobook] [--concurrency <num>]
+```
+
+Replace `'your-api-key-here'` with your actual OpenAI API key.
+
 This command will:
 1. Parse the EPUB file
 2. Trim chapters to focus on main content
@@ -60,6 +72,28 @@ This command will:
 5. Generate an audiobook (if `--audiobook` flag is used)
 
 The output files will be saved in a directory named after the book title in the same location as the input EPUB file.
+
+## Building the Docker Image
+
+To build the Docker image for this project:
+
+1. Ensure you have Docker installed on your system.
+2. Navigate to the project root directory in your terminal.
+3. Run the following command:
+
+```
+make docker-build
+```
+
+This command uses the Makefile to build the Docker image with the tag `assaflavie/speedread`.
+
+Alternatively, you can build the image directly with Docker:
+
+```
+docker build -t assaflavie/speedread .
+```
+
+After building the image, you can run the project using the Docker command provided in the "Using Docker" section above.
 
 ## Output
 
