@@ -20,7 +20,7 @@ SpeedRead Tools is a Python-based project that processes EPUB books to create su
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/speedread.git
+   git clone https://github.com/lavie/speedread.git
    cd speedread
    ```
 
@@ -41,7 +41,7 @@ SpeedRead Tools is a Python-based project that processes EPUB books to create su
 The main CLI script `speedread_cli.py` combines all the functionality into a single command. Here's how to use it:
 
 ```
-poetry run python speedread/speedread_cli.py <epub_file> [--audiobook] [--concurrency <num>]
+poetry run speedread <epub_file> [--audiobook] [--concurrency <num>]
 ```
 
 Arguments:
@@ -51,7 +51,7 @@ Arguments:
 
 Example:
 ```
-poetry run python speedread/speedread_cli.py my_ebook.epub --audiobook --concurrency 3
+poetry run speedread my_ebook.epub --audiobook
 ```
 
 ### Using Docker
@@ -89,12 +89,6 @@ make docker-build
 
 This command uses the Makefile to build the Docker image with the tag `assaflavie/speedread`.
 
-Alternatively, you can build the image directly with Docker:
-
-```
-docker build -t assaflavie/speedread .
-```
-
 After building the image, you can run the project using the Docker command provided in the "Using Docker" section above.
 
 ## Output
@@ -102,7 +96,7 @@ After building the image, you can run the project using the Docker command provi
 - A JSON file containing the book summary
 - An HTML file with the formatted summary (with dark/light/medium mode toggle)
 - MP3 audio files for each chapter (if audiobook option is selected)
-- An M4B audiobook file (if audiobook option is selected)
+- An M4B audiobook file (if audiobook option is selected) which you can import into your Books app on iOS for example.
 
 ## Contributing
 
