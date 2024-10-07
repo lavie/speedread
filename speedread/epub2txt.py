@@ -7,8 +7,9 @@ from bs4 import BeautifulSoup
 from speedread.epub_metadata import extract_toc_from_epub
 from speedread.trim_chapters import trim_chapters
 
-def extract_chapter_content(temp_dir, chapter_src):
-    chapter_path = os.path.join(temp_dir, chapter_src)
+def extract_chapter_content(temp_dir, toc_path, chapter_src):
+    base_dir = os.path.dirname(toc_path)
+    chapter_path = os.path.join(temp_dir, base_dir, chapter_src)
     if os.path.exists(chapter_path):
         with open(chapter_path, 'r', encoding='utf-8', errors='ignore') as f:
             soup = BeautifulSoup(f, 'html.parser')
@@ -41,9 +42,25 @@ def epub_to_structured_text(epub_path):
             trimmed_metadata = trim_chapters(metadata)
             print(trimmed_metadata)
             
+            # Find the TOC file path
+            toc_path = None
+            for root, _, files in os.walk(temp_dir):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
+                        if 'navPoint' in content:
+                            toc_path = file_path
+                            break
+                if toc_path:
+                    break
+            
+            if not toc_path:
+                raise ValueError("Could not find TOC file in EPUB")
+            
             # Extract chapter contents
             for chapter in trimmed_metadata['chapters']:
-                chapter['content'] = extract_chapter_content(temp_dir, chapter['src'])
+                chapter['content'] = extract_chapter_content(temp_dir, toc_path, chapter['src'])
                 del chapter['src']  # Remove the 'src' key as it's no longer needed
             
             # Cleanup phase: discard chapters with content less than 1KB
