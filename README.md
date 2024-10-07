@@ -62,6 +62,8 @@ To run the project using Docker, first build the Docker image (see the "Building
 docker run -v $(pwd):/data -e OPENAI_API_KEY='your-api-key-here' assaflavie/speedread /data/my_ebook.epub [--audiobook] [--concurrency <num>]
 ```
 
+You can use this free epub as an example: https://www.epubbooks.com/book/335-decline-and-fall-of-the-roman-empire-volume-1
+
 Replace `'your-api-key-here'` with your actual OpenAI API key.
 
 This command will:
