@@ -72,6 +72,7 @@ async def async_main():
         summaries = summary_data['summaries']
     else:
 
+        logging.info(f"Original chapter count: {len(structured_content['chapters'])}")
         logging.info("Step 2: Trimming chapters...")
         content_for_trimming = {
             'title': structured_content['title'],
