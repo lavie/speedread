@@ -17,6 +17,8 @@ def extract_chapter_content(epub_path, chapter_src):
             with open(chapter_path, 'r', encoding='utf-8', errors='ignore') as f:
                 soup = BeautifulSoup(f, 'html.parser')
                 return soup.get_text()
+        else:
+            print(f"Cannot find chapter file: {chapter_path}")
         return ""
 
 def epub_to_structured_text(epub_path):
@@ -26,6 +28,7 @@ def epub_to_structured_text(epub_path):
         
         # Trim chapters
         trimmed_metadata = trim_chapters(metadata)
+        print(trimmed_metadata)
         
         # Extract chapter contents
         for chapter in trimmed_metadata['chapters']:
