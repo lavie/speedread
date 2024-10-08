@@ -26,6 +26,10 @@ text_to_speech = "speedread.text_to_speech:main"
 batch_text_to_speech = "speedread.batch_text_to_speech:main"
 create_audiobook = "speedread.create_audiobook:main"
 speedread = "speedread.speedread_cli:main"
+speedread-web = "web.app:main"
+
+[tool.poetry.dependencies]
+flask = "^2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
