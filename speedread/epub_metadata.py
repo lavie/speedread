@@ -33,7 +33,7 @@ def extract_toc_from_epub(epub_path):
         
         # Extract metadata
         metadata = {}
-        metadata['title'] = soup.find('docTitle').text if soup.find('docTitle') else "Unknown Title"
+        metadata['title'] = soup.find('docTitle').text.strip() if soup.find('docTitle') else "Unknown Title"
         metadata['author'] = soup.find('docAuthor').text if soup.find('docAuthor') else "Unknown Author"
         
         # Extract chapters
