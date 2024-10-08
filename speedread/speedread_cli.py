@@ -40,6 +40,8 @@ async def async_main():
     parser.add_argument('epub_file', help='Path to the input EPUB file')
     parser.add_argument('--audiobook', action='store_true', help='Create audiobook (optional)')
     parser.add_argument('--concurrency', type=int, default=5, help='Number of concurrent summarization operations')
+    parser.add_argument('--voice', type=str, choices=VALID_VOICES, default="alloy",
+                        help='Voice to use for text-to-speech (default: alloy)')
     args = parser.parse_args()
 
     epub_path = Path(args.epub_file)
@@ -134,7 +136,7 @@ async def async_main():
                 'chapter_title': chapter['chapter_title'],
                 'summary': chapter['summary']
             }
-            task = asyncio.create_task(process_chapter(client, chapter_with_number, audio_dir, semaphore))
+            task = asyncio.create_task(process_chapter(client, chapter_with_number, audio_dir, semaphore, args.voice))
             tasks.append(task)
 
         results = await asyncio.gather(*tasks)
