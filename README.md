@@ -41,17 +41,18 @@ SpeedRead Tools is a Python-based project that processes EPUB books to create su
 The main CLI script `speedread_cli.py` combines all the functionality into a single command. Here's how to use it:
 
 ```
-poetry run speedread <epub_file> [--audiobook] [--concurrency <num>]
+poetry run speedread <epub_file> [--audiobook] [--concurrency <num>] [--voice <voice>]
 ```
 
 Arguments:
 - `<epub_file>`: Path to the input EPUB file (required)
 - `--audiobook`: Optional flag to create an audiobook
 - `--concurrency <num>`: Optional, set the number of concurrent operations (default is 5)
+- `--voice <voice>`: Optional, specify the voice for text-to-speech (default is "alloy")
 
 Example:
 ```
-poetry run speedread my_ebook.epub --audiobook
+poetry run speedread my_ebook.epub --audiobook --voice nova
 ```
 
 ### Using Docker
