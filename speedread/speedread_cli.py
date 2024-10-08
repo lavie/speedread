@@ -137,7 +137,7 @@ async def async_main():
                 'chapter_title': chapter['chapter_title'],
                 'summary': chapter['summary']
             }
-            task = asyncio.create_task(process_chapter(client, chapter_with_number, audio_dir, semaphore))
+            task = asyncio.create_task(process_chapter(client, chapter_with_number, audio_dir, semaphore, args.voice))
             tasks.append(task)
 
         results = await asyncio.gather(*tasks)
