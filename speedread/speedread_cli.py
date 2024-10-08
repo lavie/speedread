@@ -12,6 +12,7 @@ from speedread.trim_chapters import trim_chapters
 from speedread.summarize_book import summarize_chapter
 from speedread.compile_summaries import create_html_content
 from speedread.batch_text_to_speech import process_chapter
+from speedread.text_to_speech import VALID_VOICES
 from speedread.create_audiobook import create_audiobook
 
 from openai import OpenAI
