@@ -8,7 +8,6 @@ from speedread.epub_metadata import extract_toc_from_epub
 from speedread.trim_chapters import trim_chapters
 
 def extract_chapter_content(temp_dir, toc_path, chapter_src):
-            
     base_dir = os.path.dirname(toc_path)
     chapter_path = os.path.join(temp_dir, base_dir, chapter_src)
     if os.path.exists(chapter_path):
@@ -57,6 +56,9 @@ def epub_to_json(epub_path):
                 chapter for chapter in trimmed_metadata['chapters']
                 if len(chapter['content'].encode('utf-8')) >= 1024
             ]
+
+            if len(trimmed_metadata['chapters']) == 0:
+                raise Exception("0 chapters found. Probably a parsing error")
             
             return trimmed_metadata
     except Exception as e:
