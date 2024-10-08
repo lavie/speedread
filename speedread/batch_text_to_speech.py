@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from tqdm import tqdm
 from openai import OpenAI
-from speedread.text_to_speech import text_to_speech
+from speedread.text_to_speech import text_to_speech, VALID_VOICES
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
