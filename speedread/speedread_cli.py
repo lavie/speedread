@@ -7,7 +7,7 @@ import asyncio
 
 from speedread.utils import sanitize_filename
 
-from speedread.epub2txt import epub_to_structured_text
+from speedread.epub2json import epub_to_json
 from speedread.trim_chapters import trim_chapters
 from speedread.summarize_book import summarize_chapter
 from speedread.compile_summaries import create_html_content
@@ -48,7 +48,7 @@ async def async_main():
         return
 
     logging.info("Step 1: Parsing EPUB...")
-    structured_content = epub_to_structured_text(str(epub_path))
+    structured_content = epub_to_json(str(epub_path))
     if not structured_content:
         logging.error("Error: Failed to convert EPUB to structured text.")
         return

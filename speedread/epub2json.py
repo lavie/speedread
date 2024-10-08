@@ -18,7 +18,7 @@ def extract_chapter_content(temp_dir, toc_path, chapter_src):
     else:
         raise Error(f"Cannot find chapter file: {chapter_path}")
 
-def epub_to_structured_text(epub_path):
+def epub_to_json(epub_path):
     try:
         with tempfile.TemporaryDirectory() as temp_dir:
             # Extract EPUB contents
@@ -69,7 +69,7 @@ def main():
     parser.add_argument('-o', '--output', help='Path to save the output JSON file', default=None)
     args = parser.parse_args()
 
-    structured_content = epub_to_structured_text(args.epub_file)
+    structured_content = epub_to_json(args.epub_file)
 
     if args.output:
         with open(args.output, 'w', encoding='utf-8') as f:

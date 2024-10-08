@@ -19,7 +19,7 @@ lxml = "^5.3.0"
 pytest = "^7.3.1"
 
 [tool.poetry.scripts]
-epub2txt = "speedread.epub2txt:main"
+epub2json = "speedread.epub2json:main"
 summarize_book = "speedread.summarize_book:main"
 compile_summaries = "speedread.compile_summaries:main"
 text_to_speech = "speedread.text_to_speech:main"
