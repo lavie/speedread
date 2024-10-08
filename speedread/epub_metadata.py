@@ -11,34 +11,38 @@ def extract_toc_from_epub(epub_path):
         with zipfile.ZipFile(epub_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
         
-        # Find files containing NavPoint elements
-        nav_files = []
+        # Find content.opf and navigation files
+        content_opf = None
+        nav_file = None
         for root, _, files in os.walk(temp_dir):
             for file in files:
                 file_path = os.path.join(root, file)
-                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read()
-                    if 'navPoint' in content:
-                        nav_files.append(file_path)
+                if file == 'content.opf':
+                    content_opf = file_path
+                elif 'toc' in file.lower() and file.endswith('.ncx'):
+                    nav_file = file_path
         
-        # If more than one file contains NavPoint, abort
-        if len(nav_files) != 1:
-            raise ValueError(f"Expected 1 navigation file, found {len(nav_files)}")
+        if not content_opf:
+            raise ValueError("content.opf file not found in EPUB")
+        if not nav_file:
+            raise ValueError("Navigation file not found in EPUB")
         
-        nav_file = nav_files[0]
-        
-        # Parse the navigation file
-        with open(nav_file, 'r', encoding='utf-8') as f:
-            soup = BeautifulSoup(f, 'xml')
+        # Parse content.opf file
+        with open(content_opf, 'r', encoding='utf-8') as f:
+            opf_soup = BeautifulSoup(f, 'xml')
         
         # Extract metadata
         metadata = {}
-        metadata['title'] = soup.find('docTitle').text.strip() if soup.find('docTitle') else "Unknown Title"
-        metadata['author'] = soup.find('docAuthor').text if soup.find('docAuthor') else "Unknown Author"
+        metadata['title'] = opf_soup.find('dc:title').text.strip() if opf_soup.find('dc:title') else "Unknown Title"
+        metadata['author'] = opf_soup.find('dc:creator').text.strip() if opf_soup.find('dc:creator') else "Unknown Author"
+        
+        # Parse the navigation file
+        with open(nav_file, 'r', encoding='utf-8') as f:
+            nav_soup = BeautifulSoup(f, 'xml')
         
         # Extract chapters
         chapters = []
-        for navPoint in soup.find_all('navPoint'):
+        for navPoint in nav_soup.find_all('navPoint'):
             label = navPoint.find('text').string
             content = navPoint.find('content')
             if content:
