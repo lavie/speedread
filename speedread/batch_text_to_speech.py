@@ -9,7 +9,7 @@ from speedread.text_to_speech import text_to_speech
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-async def process_chapter(client, chapter, output_dir, semaphore):
+async def process_chapter(client, chapter, output_dir, semaphore, voice):
     try:
         chapter_number = str(chapter.get('number', 0)).zfill(2)
         output_file = output_dir / f"chapter_{chapter_number}.mp3"
@@ -26,7 +26,7 @@ async def process_chapter(client, chapter, output_dir, semaphore):
             retry_delay = 10
             for attempt in range(max_retries):
                 try:
-                    await text_to_speech(client, chapter['summary'], str(output_file))
+                    await text_to_speech(client, chapter['summary'], str(output_file), voice)
                     break
                 except Exception as e:
                     if "429" in str(e) and attempt < max_retries - 1:
@@ -59,7 +59,7 @@ async def async_main(args):
 
     for i, chapter in enumerate(book_data['summaries'], start=1):
         chapter['number'] = i  # Add chapter number
-        task = asyncio.create_task(process_chapter(client, chapter, output_dir, semaphore))
+        task = asyncio.create_task(process_chapter(client, chapter, output_dir, semaphore, args.voice))
         tasks.append(task)
 
     results = []
@@ -75,6 +75,8 @@ def main():
     parser.add_argument('input_json', help='JSON file containing book content')
     parser.add_argument('output_dir', help='Directory to save output MP3 files')
     parser.add_argument('--max-concurrency', type=int, default=5, help='Maximum number of concurrent conversions')
+    parser.add_argument('--voice', type=str, choices=VALID_VOICES, default="alloy",
+                        help='Voice to use for text-to-speech (default: alloy)')
     args = parser.parse_args()
 
     asyncio.run(async_main(args))
