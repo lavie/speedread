@@ -14,6 +14,7 @@ tqdm = "^4.65.0"
 Jinja2 = "^3.1.2"
 tiktoken = "^0.8.0"
 lxml = "^5.3.0"
+flask = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
@@ -27,9 +28,6 @@ batch_text_to_speech = "speedread.batch_text_to_speech:main"
 create_audiobook = "speedread.create_audiobook:main"
 speedread = "speedread.speedread_cli:main"
 speedread-web = "web.app:main"
-
-[tool.poetry.dependencies]
-flask = "^2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
