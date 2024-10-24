@@ -41,18 +41,33 @@ SpeedRead Tools is a Python-based project that processes EPUB books to create su
 The main CLI script `speedread_cli.py` combines all the functionality into a single command. Here's how to use it:
 
 ```
-poetry run speedread <epub_file> [--audiobook] [--concurrency <num>] [--voice <voice>]
+poetry run speedread <epub_file> [options]
 ```
 
 Arguments:
 - `<epub_file>`: Path to the input EPUB file (required)
-- `--audiobook`: Optional flag to create an audiobook
-- `--concurrency <num>`: Optional, set the number of concurrent operations (default is 5)
-- `--voice <voice>`: Optional, specify the voice for text-to-speech (default is "alloy")
 
-Example:
-```
-poetry run speedread my_ebook.epub --audiobook --voice nova
+Options:
+- `--audiobook`: Create an audiobook from the summaries
+- `--concurrency <num>`: Set the number of concurrent operations (default: 5)
+- `--voice <voice>`: Specify the voice for text-to-speech (default: "alloy")
+  Available voices: alloy, echo, fable, nova, onyx, shimmer
+- `-y, --yes`: Skip confirmation prompts
+- `--help`: Show help message and exit
+
+Examples:
+```bash
+# Basic usage - creates summary only
+poetry run speedread my_ebook.epub
+
+# Create summary and audiobook with default settings
+poetry run speedread my_ebook.epub --audiobook
+
+# Create audiobook with specific voice and higher concurrency
+poetry run speedread my_ebook.epub --audiobook --voice nova --concurrency 8
+
+# Skip all confirmation prompts
+poetry run speedread my_ebook.epub --audiobook -y
 ```
 
 ### Using Docker
@@ -60,7 +75,7 @@ poetry run speedread my_ebook.epub --audiobook --voice nova
 To run the project using Docker, first build the Docker image (see the "Building the Docker Image" section below), then use the following command:
 
 ```
-docker run -v $(pwd):/data -e OPENAI_API_KEY='your-api-key-here' assaflavie/speedread /data/my_ebook.epub [--audiobook] [--concurrency <num>]
+docker run -v $(pwd):/data -e OPENAI_API_KEY='your-api-key-here' assaflavie/speedread /data/my_ebook.epub [options]
 ```
 
 You can use this free epub as an example: https://www.epubbooks.com/book/335-decline-and-fall-of-the-roman-empire-volume-1
