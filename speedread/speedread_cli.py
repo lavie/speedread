@@ -54,29 +54,16 @@ async def async_main():
     output_dir = epub_path.parent / f"{safe_title}_speedread"
     output_dir.mkdir(exist_ok=True)
 
+    content_json_file = output_dir / f"{safe_title}_content.json"
     markdown_file = output_dir / f"{safe_title}_content.md"
     summary_json_file = output_dir / f"{safe_title}_summary.json"
     html_file = output_dir / f"{safe_title}_summary.html"
 
     structured_content = None
-    if markdown_file.exists():
-        logging.info("Loading existing markdown content...")
-        with open(markdown_file, 'r', encoding='utf-8') as f:
-            content = f.read()
-            # Parse the markdown back into structured content
-            parts = content.split('# ')
-            metadata = parts[1].split('\n', 2)
-            structured_content = {
-                'title': metadata[0],
-                'author': metadata[1].replace('by ', '').strip(),
-                'chapters': []
-            }
-            for chapter in parts[2:]:
-                chapter_lines = chapter.split('\n', 1)
-                structured_content['chapters'].append({
-                    'title': chapter_lines[0],
-                    'content': chapter_lines[1].strip() if len(chapter_lines) > 1 else ''
-                })
+    if content_json_file.exists():
+        logging.info("Loading existing content from JSON...")
+        with open(content_json_file, 'r', encoding='utf-8') as f:
+            structured_content = json.load(f)
     else:
         logging.info("Step 1: Parsing EPUB...")
         structured_content = epub_to_json(str(epub_path))
@@ -84,14 +71,19 @@ async def async_main():
             logging.error("Error: Failed to convert EPUB to structured text.")
             return
         
-        # Save as markdown
+        # Save as JSON for internal use
+        with open(content_json_file, 'w', encoding='utf-8') as f:
+            json.dump(structured_content, f, ensure_ascii=False, indent=2)
+        logging.info(f"Content JSON saved to: {content_json_file}")
+
+        # Save as markdown for human reading
         markdown_content = f"# {structured_content['title']}\nby {structured_content['author']}\n\n"
         for chapter in structured_content['chapters']:
             markdown_content += f"# {chapter['title']}\n{chapter['content']}\n\n"
         
         with open(markdown_file, 'w', encoding='utf-8') as f:
             f.write(markdown_content)
-        logging.info(f"Markdown content saved to: {markdown_file}")
+        logging.info(f"Human-readable markdown saved to: {markdown_file}")
 
     title = structured_content['title']
     author = structured_content['author']
