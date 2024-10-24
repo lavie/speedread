@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 import os
 import tempfile
 import zipfile
@@ -11,6 +12,7 @@ def extract_chapter_content(temp_dir, toc_path, chapter_src):
     base_dir = os.path.dirname(toc_path)
     chapter_path = os.path.join(temp_dir, base_dir, chapter_src)
     if os.path.exists(chapter_path):
+        logging.debug(f'Loading chapter content from {chapter_path}')
         with open(chapter_path, 'r', encoding='utf-8', errors='ignore') as f:
             soup = BeautifulSoup(f, 'html.parser')
             return soup.get_text()
