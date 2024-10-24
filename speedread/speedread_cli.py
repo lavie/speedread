@@ -98,6 +98,16 @@ async def async_main():
         chapter_count = len(full_trimmed_content['chapters'])
         logging.info(f"Trimmed chapter count: {chapter_count}")
 
+        # Display chapters and get confirmation
+        logging.info("\nChapters to be summarized:")
+        for i, chapter in enumerate(full_trimmed_content['chapters'], 1):
+            logging.info(f"{i}. {chapter['title']}")
+        
+        response = input("\nWould you like to proceed with summarizing these chapters? (y/n): ").lower().strip()
+        if response != 'y':
+            logging.info("Summarization cancelled.")
+            return
+
         logging.info("Step 3: Summarizing book...")
         client = OpenAI()
         summaries = await summarize_chapters(client, full_trimmed_content['chapters'], args.concurrency)
