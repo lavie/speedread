@@ -123,6 +123,12 @@ async def async_main():
     logging.info(f"HTML summary saved to: {html_file}")
 
     if args.audiobook:
+        logging.info("Ready to start text-to-speech conversion.")
+        response = input("Would you like to proceed with creating the audiobook? (y/n): ").lower().strip()
+        if response != 'y':
+            logging.info("Audiobook creation cancelled.")
+            return
+            
         logging.info("Step 5: Converting text to speech...")
         audio_dir = output_dir / "audio_chapters"
         audio_dir.mkdir(exist_ok=True)
