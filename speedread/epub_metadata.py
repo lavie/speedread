@@ -43,12 +43,17 @@ def extract_toc_from_epub(epub_path):
         
         # Extract chapters
         chapters = []
+        seen_sources = {}  # Track sources we've already processed
         for navPoint in nav_soup.find_all('navPoint'):
             label = navPoint.find('text').string
             content = navPoint.find('content')
             if content:
                 src = content.get('src', '').split('#')[0]
+                if src in seen_sources:
+                    logging.debug(f'Skipping duplicate chapter source: {src} (previously used in "{seen_sources[src]}")')
+                    continue
                 chapter = {"title": label, "src": src}
+                seen_sources[src] = label
                 logging.info(f'Found chapter: {chapter}')
                 chapters.append(chapter)
             else:
