@@ -49,6 +49,8 @@ async def async_main():
     parser.add_argument('--concurrency', type=int, default=5, help='Number of concurrent summarization operations')
     parser.add_argument('--voice', type=str, choices=VALID_VOICES, default="alloy",
                         help='Voice to use for text-to-speech (default: alloy)')
+    parser.add_argument('-y', '--yes', action='store_true',
+                        help='Skip confirmation prompts')
     args = parser.parse_args()
 
     epub_path = Path(args.epub_file)
@@ -133,10 +135,11 @@ async def async_main():
             word_count = len(chapter['content'].split())
             logging.info(f"{i}. {chapter['title']} ({word_count} words)")
         
-        response = input("\nWould you like to proceed with summarizing these chapters? (y/n): ").lower().strip()
-        if response != 'y':
-            logging.info("Summarization cancelled.")
-            return
+        if not args.yes:
+            response = input("\nWould you like to proceed with summarizing these chapters? (y/n): ").lower().strip()
+            if response != 'y':
+                logging.info("Summarization cancelled.")
+                return
 
         logging.info("Step 3: Summarizing book...")
         client = OpenAI()
@@ -164,10 +167,11 @@ async def async_main():
 
     if args.audiobook:
         logging.info("Ready to start text-to-speech conversion.")
-        response = input("Would you like to proceed with creating the audiobook? (y/n): ").lower().strip()
-        if response != 'y':
-            logging.info("Audiobook creation cancelled.")
-            return
+        if not args.yes:
+            response = input("Would you like to proceed with creating the audiobook? (y/n): ").lower().strip()
+            if response != 'y':
+                logging.info("Audiobook creation cancelled.")
+                return
             
         logging.info("Step 5: Converting text to speech...")
         audio_dir = output_dir / "audio_chapters"
