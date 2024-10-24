@@ -5,6 +5,13 @@ import json
 import logging
 import asyncio
 
+# Get log level from environment variable, default to INFO
+log_level = os.environ.get('LOG_LEVEL', 'INFO').upper()
+logging.basicConfig(
+    level=getattr(logging, log_level),
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
 from speedread.utils import sanitize_filename
 
 from speedread.epub2json import epub_to_json
@@ -17,7 +24,6 @@ from speedread.create_audiobook import create_audiobook
 
 from openai import OpenAI
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 async def summarize_chapters(client, chapters, max_concurrency):
     async def summarize(chapter):
