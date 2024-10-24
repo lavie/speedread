@@ -101,7 +101,8 @@ async def async_main():
         # Display chapters and get confirmation
         logging.info("\nChapters to be summarized:")
         for i, chapter in enumerate(full_trimmed_content['chapters'], 1):
-            logging.info(f"{i}. {chapter['title']}")
+            word_count = len(chapter['content'].split())
+            logging.info(f"{i}. {chapter['title']} ({word_count} words)")
         
         response = input("\nWould you like to proceed with summarizing these chapters? (y/n): ").lower().strip()
         if response != 'y':
