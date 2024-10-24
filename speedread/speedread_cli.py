@@ -50,22 +50,53 @@ async def async_main():
         logging.error(f"Error: File {epub_path} does not exist.")
         return
 
-    logging.info("Step 1: Parsing EPUB...")
-    structured_content = epub_to_json(str(epub_path))
-    if not structured_content:
-        logging.error("Error: Failed to convert EPUB to structured text.")
-        return
+    safe_title = sanitize_filename(epub_path.stem)
+    output_dir = epub_path.parent / f"{safe_title}_speedread"
+    output_dir.mkdir(exist_ok=True)
+
+    markdown_file = output_dir / f"{safe_title}_content.md"
+    summary_json_file = output_dir / f"{safe_title}_summary.json"
+    html_file = output_dir / f"{safe_title}_summary.html"
+
+    structured_content = None
+    if markdown_file.exists():
+        logging.info("Loading existing markdown content...")
+        with open(markdown_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+            # Parse the markdown back into structured content
+            parts = content.split('# ')
+            metadata = parts[1].split('\n', 2)
+            structured_content = {
+                'title': metadata[0],
+                'author': metadata[1].replace('by ', '').strip(),
+                'chapters': []
+            }
+            for chapter in parts[2:]:
+                chapter_lines = chapter.split('\n', 1)
+                structured_content['chapters'].append({
+                    'title': chapter_lines[0],
+                    'content': chapter_lines[1].strip() if len(chapter_lines) > 1 else ''
+                })
+    else:
+        logging.info("Step 1: Parsing EPUB...")
+        structured_content = epub_to_json(str(epub_path))
+        if not structured_content:
+            logging.error("Error: Failed to convert EPUB to structured text.")
+            return
+        
+        # Save as markdown
+        markdown_content = f"# {structured_content['title']}\nby {structured_content['author']}\n\n"
+        for chapter in structured_content['chapters']:
+            markdown_content += f"# {chapter['title']}\n{chapter['content']}\n\n"
+        
+        with open(markdown_file, 'w', encoding='utf-8') as f:
+            f.write(markdown_content)
+        logging.info(f"Markdown content saved to: {markdown_file}")
 
     title = structured_content['title']
     author = structured_content['author']
     logging.info(f"Book: '{title}' by {author}")
     summaries = None
-    safe_title = sanitize_filename(title)
-    output_dir = epub_path.parent / f"{safe_title}_speedread"
-    output_dir.mkdir(exist_ok=True)
-
-    summary_json_file = output_dir / f"{safe_title}_summary.json"
-    html_file = output_dir / f"{safe_title}_summary.html"
 
 
     if summary_json_file.exists():
