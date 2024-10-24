@@ -1,3 +1,4 @@
+import logging
 import os
 import tempfile
 import zipfile
@@ -47,7 +48,11 @@ def extract_toc_from_epub(epub_path):
             content = navPoint.find('content')
             if content:
                 src = content.get('src', '').split('#')[0]
-                chapters.append({"title": label, "src": src})
+                chapter = {"title": label, "src": src}
+                logging.info(f'Found chapter: {chapter}')
+                chapters.append(chapter)
+            else:
+                logging.warning(f'Chapter without content: {label}')
         
         metadata['chapters'] = chapters
         
